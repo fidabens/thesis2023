@@ -5,6 +5,7 @@ import axios from './api/axios';
 
 const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
+const EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 const REGISTER_URL = '/register';
 
 const Register = () => {
@@ -14,6 +15,22 @@ const Register = () => {
     const [user, setUser] = useState('');
     const [validName, setValidName] = useState(false);
     const [userFocus, setUserFocus] = useState(false);
+
+    const [email, setEmail] = useState('');
+    const [validEmail, setValidEmail] = useState(false);
+    const [emailFocus, setEmailFocus] = useState(false);
+
+    const [adress, setadress] = useState('');
+
+    const [city, setcity] = useState('');
+
+    const [state, setstate] = useState('');
+
+    const [zip, setzip] = useState('');
+
+    const [country, setcoutry] = useState('');
+
+    const [Position, setposition] = useState('');
 
     const [pwd, setPwd] = useState('');
     const [validPwd, setValidPwd] = useState(false);
@@ -32,6 +49,9 @@ const Register = () => {
 
     useEffect(() => {
         setValidName(USER_REGEX.test(user));
+    }, [user])
+    useEffect(() => {
+        setValidEmail(EMAIL_REGEX.test(email));
     }, [user])
 
     useEffect(() => {
@@ -52,6 +72,8 @@ const Register = () => {
             setErrMsg("Invalid Entry");
             return;
         }
+        console.log(user, pwd);
+        setSuccess(true);
         try {
             const response = await axios.post(REGISTER_URL,
                 JSON.stringify({ user, pwd }),
@@ -67,8 +89,15 @@ const Register = () => {
             //clear state and controlled inputs
             //need value attrib on inputs for this
             setUser('');
+            setEmail('');
+            setadress('');
             setPwd('');
             setMatchPwd('');
+            setcity('');
+            setstate('');
+            setzip('');
+            setcoutry('');
+            setposition('');
         } catch (err) {
             if (!err?.response) {
                 setErrMsg('No Server Response');
@@ -83,11 +112,12 @@ const Register = () => {
 
     return (
         <>
+        <div className="Login">
             {success ? (
                 <section>
                     <h1>Success!</h1>
                     <p>
-                        <a href="#">Sign In</a>
+                        <a href="/Login">Sign In</a>
                     </p>
                 </section>
             ) : (
@@ -119,12 +149,80 @@ const Register = () => {
                             Must begin with a letter.<br />
                             Letters, numbers, underscores, hyphens allowed.
                         </p>
-
+                        <label htmlFor="email">
+                            E-mail address:
+                            <FontAwesomeIcon icon={faCheck} className={validEmail ? "valid" : "hide"} />
+                            <FontAwesomeIcon icon={faTimes} className={validEmail || !pwd ? "hide" : "invalid"} />
+                            <input 
+                            type="text" 
+                            id="email"
+                            autoComplete="off"
+                            onChange={(e) => setEmail(e.target.value)}
+                            required >
+                            </input>
+                        </label>
+                        <label htmlFor="adress">
+                            Address line:
+                            <input 
+                            type="text" 
+                            id="adress"
+                            autoComplete="off"
+                            onChange={(e) => setadress(e.target.value)}
+                            required >
+                            </input>
+                        </label>
+                        <label htmlFor="city">
+                            City:   
+                            <input 
+                            type="text" 
+                            id="city"
+                            autoComplete="off"
+                            onChange={(e) => setcity(e.target.value)}
+                            required >
+                            </input>
+                        </label>
+                        <label htmlFor="state">
+                            state / province:
+                            <input 
+                            type="text" 
+                            id="state"
+                            autoComplete="off"
+                            onChange={(e) => setstate(e.target.value)}
+                            required >
+                            </input>
+                        </label>
+                        <label htmlFor="yip">
+                            Zip / postal code:
+                            <input 
+                            type="text" 
+                            id="zip"
+                            autoComplete="off"
+                            onChange={(e) => setzip(e.target.value)}
+                            required >
+                            </input>
+                        </label>
+                        <label htmlFor="coutry">
+                            Country:
+                            <input 
+                            type="text" 
+                            id="coutry"
+                            autoComplete="off"
+                            onChange={(e) => setcoutry(e.target.value)}
+                            required >
+                            </input>
+                        </label>
+                        <label htmlFor="position">
+                            Position:
+                            <select name="cars" id="cars">
+                                <option value="doctor">Doctor</option>
+                                <option value="laboratory">Laboratory</option>
+                            </select>
+                        </label>
 
                         <label htmlFor="password">
                             Password:
                             <FontAwesomeIcon icon={faCheck} className={validPwd ? "valid" : "hide"} />
-                            <FontAwesomeIcon icon={faTimes} className={validPwd || !pwd ? "hide" : "invalid"} />
+                            <FontAwesomeIcon icon={faTimes} className={validPwd || !email ? "hide" : "invalid"} />
                         </label>
                         <input
                             type="password"
@@ -172,11 +270,12 @@ const Register = () => {
                         Already registered?<br />
                         <span className="line">
                             {/*put router link here*/}
-                            <a href="#">Sign In</a>
+                            <a href="/Login#">Sign In</a>
                         </span>
                     </p>
                 </section>
             )}
+            </div>
         </>
     )
 }

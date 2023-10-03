@@ -1,5 +1,8 @@
-import React from 'react';
-import Paper from '@mui/material/Paper';
+import React, { useState } from 'react';
+import Button from '@mui/material/Button';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import { Navbar } from './Navbar';
 import { useNavigate } from 'react-router-dom';
 import './Booking.css';
@@ -52,7 +55,7 @@ const samples = [
 
 export const Booking = () => {
   const navigate = useNavigate();
-
+  const [selectedSample, setSelectedSample] = useState(samples[0]);
   const navigateToBooking = () => {
     navigate('/');
   };
@@ -63,11 +66,25 @@ export const Booking = () => {
         <h1>Welcome to the platform that eases your life</h1>
         <label htmlFor="position">
           What is the sample that you need ?
-          <select name="samples" id="samples">
-            {samples.map((sample) => (
-              <option value={sample}>{sample}</option>
-            ))}
-          </select>
+          <PopupState variant="popover" popupId="demo-popup-menu">
+            {(popupState) => (
+              <React.Fragment>
+                <Button {...bindTrigger(popupState)}>{selectedSample}</Button>
+                <Menu {...bindMenu(popupState)}>
+                  {samples.map((sample) => (
+                    <MenuItem
+                      onClick={() => {
+                        popupState.close();
+                        setSelectedSample(sample);
+                      }}
+                    >
+                      {sample}
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </React.Fragment>
+            )}
+          </PopupState>
         </label>
 
         <h1>How many samples are you booking ?</h1>

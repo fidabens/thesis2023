@@ -69,7 +69,21 @@ export const Booking = () => {
           <PopupState variant="popover" popupId="demo-popup-menu">
             {(popupState) => (
               <React.Fragment>
-                <Button {...bindTrigger(popupState)}>{selectedSample}</Button>
+                <Button
+                  sx={{
+                    width: 250,
+                    color: 'white',
+                    backgroundColor: '#C0C0C0',
+                    marginLeft: '5px',
+                    borderRadius: '15px',
+                    '&:hover': {
+                      backgroundColor: 'black',
+                    },
+                  }}
+                  {...bindTrigger(popupState)}
+                >
+                  {selectedSample}
+                </Button>
                 <Menu {...bindMenu(popupState)}>
                   {samples.map((sample) => (
                     <MenuItem

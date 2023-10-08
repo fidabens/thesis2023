@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import Button from '@mui/material/Button';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
+import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
 import { Navbar } from './Navbar';
+import { DropDownComponent } from './DropDownComponent';
 import { useNavigate } from 'react-router-dom';
 import './Booking.css';
-const samples = [
+import BookingTable from './BookingTable';
+const samplesData = [
   'EDTA-Blut',
   'Punktat_EDTA',
   'Serum',
@@ -54,61 +55,143 @@ const samples = [
 ];
 
 export const Booking = () => {
-  const navigate = useNavigate();
-  const [selectedSample, setSelectedSample] = useState(samples[0]);
-  const navigateToBooking = () => {
-    navigate('/');
+  const [samples, setSamples] = useState(samplesData);
+  const [step, setStep] = useState(0);
+  const [sampleCount, setSampleCount] = useState(1);
+  const [selectedSamples, setSelectedSamples] = useState([]);
+  // const navigate = useNavigate();
+  // const navigateToBooking = () => {
+  //   navigate('/');
+  // };
+  const addSampleNumber = () => {
+    setSampleCount(sampleCount + 1);
+  };
+  const decreaseSampleNumber = () => {
+    if (sampleCount > 1) {
+      setSampleCount(sampleCount - 1);
+    }
+  };
+  const resetSampleCounter = () => {
+    setSampleCount(0);
+  };
+  const addNewSample = (sample) => {
+    setSelectedSamples([...selectedSamples, { sample, sampleCount }]);
   };
   return (
     <>
       <Navbar />
-      <div className="counter">
-        <h1>Welcome to the platform that eases your life</h1>
-        <label htmlFor="position">
-          What is the sample that you need ?
-          <PopupState variant="popover" popupId="demo-popup-menu">
-            {(popupState) => (
-              <React.Fragment>
-                <Button
-                  sx={{
-                    width: 250,
-                    color: 'white',
-                    backgroundColor: '#C0C0C0',
-                    marginLeft: '5px',
-                    borderRadius: '15px',
-                    '&:hover': {
-                      backgroundColor: 'black',
-                    },
-                  }}
-                  {...bindTrigger(popupState)}
-                >
-                  {selectedSample}
-                </Button>
-                <Menu {...bindMenu(popupState)}>
-                  {samples.map((sample) => (
-                    <MenuItem
-                      onClick={() => {
-                        popupState.close();
-                        setSelectedSample(sample);
-                      }}
-                    >
-                      {sample}
-                    </MenuItem>
-                  ))}
-                </Menu>
-              </React.Fragment>
-            )}
-          </PopupState>
-        </label>
-
-        <h1>How many samples are you booking ?</h1>
-        <span className="counter__output"></span>
-        <div className="btn__container">
-          <button className="control__btn">+</button>
-          <button className="control__btn">-</button>
-          <button className="reset">Reset</button>
-        </div>
-      </div>
+      <Container className="counter">
+        <h1 style={{ marginTop: '45px', color: 'black' }}>
+          Welcome to the platform that eases your life
+        </h1>
+        <Box
+          sx={{
+            backgroundColor: '#D9D9D9',
+            color: 'black',
+            marginTop: '20px',
+            width: '936px',
+            height: '250px',
+            borderRadius: '10px',
+            paddingTop: '10px',
+          }}
+        >
+          <div style={{ marginBottom: '20px' }}>
+            What is the sample that you need ?
+            <DropDownComponent
+              samples={samples}
+              addSample={addNewSample}
+            ></DropDownComponent>
+          </div>
+          <Box
+            sx={{
+              marginTop: '20px',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              textAlign: 'center',
+            }}
+          >
+            <div>How many samples are you booking ?</div>
+            <Box
+              sx={{
+                marginTop: '20px',
+                backgroundColor: 'white',
+                width: '169px',
+                borderRadius: '10px',
+                paddingTop: '5px',
+              }}
+            >
+              <Button
+                style={{
+                  color: 'white',
+                  backgroundColor: 'green',
+                  width: '26px',
+                  height: '28px',
+                  fontSize: '25px',
+                  minWidth: '0px',
+                  fontFamily: 'Poppins',
+                  marginRight: '20px',
+                }}
+                onClick={addSampleNumber}
+              >
+                +
+              </Button>
+              <span style={{ fontSize: '25px' }}> {sampleCount}</span>
+              <Button
+                style={{
+                  color: 'white',
+                  backgroundColor: 'red',
+                  width: '26px',
+                  height: '28px',
+                  fontSize: '35px',
+                  minWidth: '0px',
+                  fontFamily: 'Poppins',
+                  marginLeft: '20px',
+                }}
+                onClick={decreaseSampleNumber}
+              >
+                -
+              </Button>
+              <Button
+                style={{ textTransform: 'none', color: '#cfd8dc' }}
+                onClick={resetSampleCounter}
+              >
+                Reset
+              </Button>
+            </Box>
+          </Box>
+        </Box>
+        <Box mt="15px">
+          <Button
+            sx={{
+              backgroundColor: '#426CFF',
+              color: 'white',
+              textTransform: 'none',
+              fontSize: '20px',
+              width: '140px',
+              marginRight: '40px',
+              height: '80px',
+            }}
+            onClick={addNewSample}
+          >
+            Add new sample
+          </Button>
+          <Button
+            sx={{
+              backgroundColor: '#426CFF',
+              color: 'white',
+              textTransform: 'none',
+              fontSize: '20px',
+              width: '140px',
+              marginLeft: '40px',
+              height: '80px',
+            }}
+          >
+            Book your drone now
+          </Button>
+        </Box>
+        <BookingTable selectedSamples={selectedSamples}></BookingTable>
+      </Container>
     </>
   );
 };

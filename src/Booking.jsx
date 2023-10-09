@@ -57,6 +57,7 @@ const samplesData = [
 export const Booking = () => {
   const [samples, setSamples] = useState(samplesData);
   const [step, setStep] = useState(0);
+  const [selectedSample, setSelectedSample] = useState('EDTA-Blut');
   const [sampleCount, setSampleCount] = useState(1);
   const [selectedSamples, setSelectedSamples] = useState([]);
   // const navigate = useNavigate();
@@ -74,8 +75,14 @@ export const Booking = () => {
   const resetSampleCounter = () => {
     setSampleCount(0);
   };
-  const addNewSample = (sample) => {
-    setSelectedSamples([...selectedSamples, { sample, sampleCount }]);
+  const addNewSample = () => {
+    setSelectedSamples([
+      ...selectedSamples,
+      { sample: selectedSample, sampleCount },
+    ]);
+  };
+  const selectSample = (sample) => {
+    setSelectedSample(sample);
   };
   return (
     <>
@@ -99,7 +106,7 @@ export const Booking = () => {
             What is the sample that you need ?
             <DropDownComponent
               samples={samples}
-              addSample={addNewSample}
+              selectSample={selectSample}
             ></DropDownComponent>
           </div>
           <Box

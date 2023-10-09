@@ -33,7 +33,7 @@ export function DropDownComponent(props) {
                     console.log(sample);
                     popupState.close();
                     setSelectedSample(sample);
-                    props.addSample(sample);
+                    props.selectSample(sample);
                   }}
                   key={sample}
                 >
